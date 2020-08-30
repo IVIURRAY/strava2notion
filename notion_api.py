@@ -54,3 +54,4 @@ class NotionInterface:
         row.set_property("distance (m)", data.distance)
         row.set_property("time (s)", data.moving_time)
         row.set_property("cals", data.kilojoules)
+        print(f'Added {data.name} on {data.start_date_local} to Notion!')
