@@ -31,9 +31,9 @@ class NotionInterface:
         strava_page = self.get_strava_page()
 
         # Check if we've a table already
-        # for block in strava_page.children:
-        #     if hasattr(block, 'title') and block.title == self.strava_table_title:
-        #         return block
+        for block in strava_page.children:
+            if hasattr(block, 'title') and block.title == self.strava_table_title:
+                return block
 
         # Create a table
         strava_table = strava_page.children.add_new(CollectionViewBlock)
@@ -46,12 +46,19 @@ class NotionInterface:
         return strava_table
 
     def add_row_to_table(self, table, data):
-        row = table.collection.add_row()
+        # HACK - needs to happen to work!
+        table.collection.parent.views
 
-        row.set_property("title", data.name)
-        row.set_property("date", data.start_date_local)
-        row.set_property("type", data.type)
-        row.set_property("distance (m)", data.distance)
-        row.set_property("time (s)", data.moving_time)
-        row.set_property("cals", data.kilojoules)
-        print(f'Added {data.name} on {data.start_date_local} to Notion!')
+        rows = table.collection.get_rows()
+        if not any([r.name == data.name and r.date.start.date() == data.start_date_local.date() for r in rows]):
+            row = table.collection.add_row()
+
+            row.set_property("title", data.name)
+            row.set_property("date", data.start_date_local)
+            row.set_property("type", data.type)
+            row.set_property("distance (m)", data.distance)
+            row.set_property("time (s)", data.moving_time)
+            row.set_property("cals", data.kilojoules)
+            print(f'Added {data.name} on {data.start_date_local} to Notion!')
+        else:
+            print(f'Skipping {data.name} for {data.start_date_local}')
