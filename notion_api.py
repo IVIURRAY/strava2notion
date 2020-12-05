@@ -1,9 +1,8 @@
 from notion.block import CollectionViewBlock
 from notion.client import NotionClient
 
+from config import TOKEN_V2
 from table_schema import SCHEMA
-
-TOKEN_V2 = ""
 
 
 class NotionInterface:
